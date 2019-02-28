@@ -5,32 +5,22 @@ import classNames from '../../lib/classNames';
 
 const baseClassName = getClassName('Epic');
 
-export default class Epic extends React.Component {
-  static propTypes = {
-    className: PropTypes.string,
-    children: PropTypes.node,
-    tabbar: PropTypes.node.isRequired,
-    activeStory: PropTypes.string.isRequired
-  };
+const Epic = props => {
+  const { className, activeStory, tabbar, children, ...restProps } = props;
 
-  getChildContext () {
-    return {
-      hasTabbar: this.props.hasOwnProperty('tabbar')
-    };
-  }
+  return (
+    <div {...restProps} className={classNames(baseClassName, className)}>
+      {React.Children.toArray(children).find(item => item.props.id === activeStory)}
+      {tabbar}
+    </div>
+  );
+};
 
-  static childContextTypes = {
-    hasTabbar: PropTypes.bool
-  };
+Epic.propTypes = {
+  className: PropTypes.string,
+  children: PropTypes.node,
+  tabbar: PropTypes.node.isRequired,
+  activeStory: PropTypes.string.isRequired
+};
 
-  render () {
-    const { className, activeStory, tabbar, children, ...restProps } = this.props;
-
-    return (
-      <div {...restProps} className={classNames(baseClassName, className)}>
-        {React.Children.toArray(children).find(item => item.props.id === activeStory)}
-        {tabbar}
-      </div>
-    );
-  }
-}
+export default Epic;
