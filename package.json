@@ -1,7 +1,11 @@
 {
   "name": "@vkontakte/vkui",
   "version": "2.18.4",
-  "main": "dist/vkui.js",
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "license": "MIT",
   "description": "VKUI library",
   "repository": "https://github.com/VKCOM/VKUI",
@@ -14,7 +18,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.2.0",
     "@babel/preset-env": "^7.2.0",
     "@babel/preset-react": "^7.0.0",
-    "@vkontakte/appearance": "git@github.com:VKCOM/Appearance.git#2.1.0",
+    "@vkontakte/appearance": "https://github.com/VKCOM/Appearance#2.1.0",
     "autoprefixer": "^7.2.3",
     "babel-eslint": "^8.2.3",
     "babel-loader": "^8.0.4",
