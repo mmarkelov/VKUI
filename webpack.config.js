@@ -7,7 +7,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 const config = {
   entry: {
-    vkui: './src/index.js'
+    vkui: ['./src', './src/styles/styles.css']
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -28,7 +28,7 @@ const config = {
     ]
   },
   optimization: {
-    minimize: false
+    minimize: isProduction
   },
   devtool: 'source-map',
   plugins: [
