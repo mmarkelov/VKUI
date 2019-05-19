@@ -268,7 +268,7 @@ export default class Cell extends Component {
           component={selectable ? 'label' : href ? 'a' : 'div'}
           className="Cell__in"
           href={href}
-          disabled={(!selectable && !onClick && !href || removable || draggable)}
+          disabled={((!selectable && !onClick && !href) || removable || draggable)}
           style={removable ? { transform: `translateX(-${this.state.removeOffset}px)` } : null}
         >
           {selectable && <input {...inputProps} type="checkbox" className="Cell__checkbox" />}

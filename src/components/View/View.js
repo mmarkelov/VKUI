@@ -367,7 +367,7 @@ export default class View extends Component {
     const isPrev = panelId === this.state.swipeBackPrevPanel;
     const isNext = panelId === this.state.swipeBackNextPanel;
 
-    if (!isPrev && !isNext || this.state.swipingBackFinish !== null) {
+    if ((!isPrev && !isNext) || this.state.swipingBackFinish !== null) {
       return {};
     }
 
@@ -400,7 +400,7 @@ export default class View extends Component {
     const isPrev = panelId === this.state.swipeBackPrevPanel;
     const isNext = panelId === this.state.swipeBackNextPanel;
 
-    if (!isPrev && !isNext || this.state.swipingBackFinish !== null) {
+    if ((!isPrev && !isNext) || this.state.swipingBackFinish !== null) {
       return {
         title: {},
         bg: {},

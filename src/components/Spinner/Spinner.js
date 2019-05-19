@@ -28,6 +28,8 @@ const Spinner = React.memo(({ className, size, ...restProps }) => (
   </div>
 ));
 
+Spinner.displayName = 'Spinner';
+
 Spinner.propTypes = {
   style: PropTypes.object,
   size: PropTypes.oneOf(['small', 'regular', 'large', 'medium']),
