@@ -10,38 +10,17 @@ import { IS_PLATFORM_ANDROID } from '../../lib/platform';
 
 const baseClassNames = getClassName('Alert');
 
-export default class Alert extends Component {
-  state = {};
-  element = React.createRef();
+const Alert = props => {
+  const [closing, setClosing] = useState(false);
+  const element = React.createRef();
 
-  static propTypes = {
-    style: PropTypes.object,
-    className: PropTypes.string,
-    children: PropTypes.node,
-    actionsLayout: PropTypes.oneOf(['vertical', 'horizontal']),
-    actions: PropTypes.arrayOf(PropTypes.shape({
-      title: PropTypes.string,
-      action: PropTypes.func,
-      /**
-       * 'cancel' - iOS only
-       */
-      style: PropTypes.oneOf(['cancel', 'destructive', 'default'])
-    })),
-    onClose: PropTypes.func.isRequired
-  };
-
-  static defaultProps = {
-    actionsLayout: 'horizontal',
-    actions: []
-  };
-
-  onItemClick = item => () => {
+  const onItemClick = item => () => {
     const { action, autoclose } = item;
 
     if (autoclose) {
-      this.setState({ closing: true });
-      this.waitTransitionFinish(() => {
-        autoclose && this.props.onClose();
+      setClosing(true);
+      waitTransitionFinish(() => {
+        autoclose && props.onClose();
         action && action();
       });
     } else {
@@ -49,56 +28,76 @@ export default class Alert extends Component {
     }
   };
 
-  onClose = () => {
-    this.setState({ closing: true });
-    this.waitTransitionFinish(() => {
-      this.props.onClose();
+  const onClose = () => {
+    setClosing(true);
+    waitTransitionFinish(() => {
+      props.onClose();
     });
   };
 
-  stopPropagation = e => e.stopPropagation();
+  const stopPropagation = e => e.stopPropagation();
 
-  waitTransitionFinish (eventHandler) {
+  const waitTransitionFinish = eventHandler => {
     if (transitionEvents.supported) {
       const eventName = transitionEvents.prefix ? transitionEvents.prefix + 'TransitionEnd' : 'transitionend';
 
-      this.element.current.removeEventListener(eventName, eventHandler);
-      this.element.current.addEventListener(eventName, eventHandler);
+      element.current.removeEventListener(eventName, eventHandler);
+      element.current.addEventListener(eventName, eventHandler);
     } else {
       setTimeout(eventHandler.bind(this), IS_PLATFORM_ANDROID ? 200 : 300);
     }
-  }
+  };
 
-  render () {
-    const { actions, actionsLayout, children, className, style, ...restProps } = this.props;
-    const { closing } = this.state;
+  const { actions, actionsLayout, children, className, style, ...restProps } = props;
 
-    return (
-      <PopoutWrapper
-        closing={closing}
-        style={style}
-        onClick={this.onClose}
-      >
-        <div {...restProps} ref={this.element} onClick={this.stopPropagation} className={classNames(baseClassNames, {
-          'Alert--v': actionsLayout === 'vertical',
-          'Alert--h': actionsLayout === 'horizontal',
-          'Alert--closing': closing
-        })}>
-          <div className="Alert__content">{children}</div>
-          <footer className="Alert__footer">
-            {actions.map((button, i) => (
-              <Tappable
-                component="button"
-                className={classNames('Alert__btn', { [`Alert__btn--${button.style}`]: button.style })}
-                onClick={this.onItemClick(button)}
-                key={`alert-action-${i}`}
-              >
-                <span dangerouslySetInnerHTML={{ __html: button.title }} />
-              </Tappable>
-            ))}
-          </footer>
-        </div>
-      </PopoutWrapper>
-    );
-  }
-}
+  return (
+    <PopoutWrapper
+      closing={closing}
+      style={style}
+      onClick={onClose}
+    >
+      <div {...restProps} ref={element} onClick={stopPropagation} className={classNames(baseClassNames, {
+        'Alert--v': actionsLayout === 'vertical',
+        'Alert--h': actionsLayout === 'horizontal',
+        'Alert--closing': closing
+      })}>
+        <div className="Alert__content">{children}</div>
+        <footer className="Alert__footer">
+          {actions.map((button, i) => (
+            <Tappable
+              component="button"
+              className={classNames('Alert__btn', { [`Alert__btn--${button.style}`]: button.style })}
+              onClick={onItemClick(button)}
+              key={`alert-action-${i}`}
+            >
+              <span dangerouslySetInnerHTML={{ __html: button.title }} />
+            </Tappable>
+          ))}
+        </footer>
+      </div>
+    </PopoutWrapper>
+  );
+};
+
+Alert.propTypes = {
+  style: PropTypes.object,
+  className: PropTypes.string,
+  children: PropTypes.node,
+  actionsLayout: PropTypes.oneOf(['vertical', 'horizontal']),
+  actions: PropTypes.arrayOf(PropTypes.shape({
+    title: PropTypes.string,
+    action: PropTypes.func,
+    /**
+     * 'cancel' - iOS only
+     */
+    style: PropTypes.oneOf(['cancel', 'destructive', 'default'])
+  })),
+  onClose: PropTypes.func.isRequired
+};
+
+Alert.defaultProps = {
+  actionsLayout: 'horizontal',
+  actions: []
+};
+
+export default Alert;
